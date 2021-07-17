@@ -24,6 +24,13 @@
   - Editing table has many features, with most importants ones like changing the data types and able to manipulate the dataset. 
   - With in the window, user are able to perform plot viewer if any data needs to be visualized. 
 * Capable to select labels and if the labels are not catogorized then able to chose a specfic value to catgorized the data. With the chosen value becoming '1' and rest '0'.
+* Option to perform different models: SVM, Regression, MLPRegression and XGBoost.
+* Option to apply PCA with chosen number of components.
+* Model explanation, depends on the model applied.
+* Gradient Boosting Regression.
+
+![Features](https://user-images.githubusercontent.com/78603267/126048668-38f58f7b-4f2d-4a31-b3b0-47fa47e251a0.PNG)
+
 
 ## How To Use
 
@@ -35,5 +42,7 @@ With [GitHub] copy the repository over with 'copy repository' in the interface. 
 
 You can [download](https://github.com/983046/ExMed.git) the latest installable version of the tool for Windows and macOS.
 
+## Code
+![Code_flow](https://user-images.githubusercontent.com/78603267/126048686-eee35dab-1fe1-40d7-9daf-9171992e7c06.jpg)
 
 
