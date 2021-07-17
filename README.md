@@ -10,9 +10,6 @@
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
 </p>
 
   https://user-images.githubusercontent.com/78603267/126047811-a8dfeaf2-6613-4b57-bc99-b13de0b4d66d.mp4 
