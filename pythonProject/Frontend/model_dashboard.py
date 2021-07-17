@@ -13,9 +13,9 @@ import numpy as np
 import pickle
 
 
-from Frontend.run_model import RunModel
-from Frontend.user_dashboard import UserDashboard
-from Frontend.feature_dashboard import FeatureDashboard
+from pythonProject.Frontend.run_model import RunModel
+from pythonProject.Frontend.user_dashboard import UserDashboard
+from pythonProject.Frontend.feature_dashboard import FeatureDashboard
 
 FOLDER_URL = 'joined_files'
 SAVED_MODEL_URL = 'saved_model'

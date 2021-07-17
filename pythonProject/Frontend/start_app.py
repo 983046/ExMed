@@ -1,7 +1,7 @@
 from tkinter import *
 from ttkthemes import themed_tk as tk
 
-from Frontend.user_dashboard import UserDashboard
+from pythonProject.Frontend.user_dashboard import UserDashboard
 
 
 class StartApp:

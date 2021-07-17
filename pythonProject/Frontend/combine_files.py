@@ -4,7 +4,7 @@ from PIL import ImageTk
 from tqdm import tk
 import pandas as pd
 
-from Frontend.concatenate_files import ConcatenateFiles
+from pythonProject.Frontend.concatenate_files import ConcatenateFiles
 
 #todo Make combine_files with concatenate_files, make it automatic.
 

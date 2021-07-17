@@ -10,7 +10,7 @@ from tkinter import ttk, messagebox, simpledialog
 from PIL import ImageTk
 import pandas as pd
 
-from Frontend.user_dashboard import UserDashboard
+from pythonProject.Frontend.user_dashboard import UserDashboard
 
 #todo Solve: File location
 #todo saving name have a condition on the length

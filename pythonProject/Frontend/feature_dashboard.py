@@ -13,7 +13,7 @@ import pandas as pd
 from pandastable import Table, TableModel
 import numpy as np
 
-from Frontend.user_dashboard import UserDashboard
+from pythonProject.Frontend.user_dashboard import UserDashboard
 FOLDER_URL = 'joined_files'
 
 
