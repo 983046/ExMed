@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import shap
+import tkinter as tk
+from PIL import ImageTk, Image
+from PIL._imaging import display
 from imblearn.over_sampling import SMOTE
 from matplotlib.colors import ListedColormap
 from sklearn import tree
@@ -16,8 +19,9 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, Normalizer
 from sklearn.svm import SVC
 import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import imgkit
+import shutil
 
+from html2image import Html2Image
 
 
 imputer = SimpleImputer(strategy='median')
@@ -29,7 +33,6 @@ import xgboost as xgb
 
 FILE_URL = 'HTML_file'
 HTML_IMAGE_URL = 'HTML_image'
-HTML_pdf = 'HTML_pdf'
 
 class RunModel:
     def feature_label(self, read_file, label):
@@ -403,6 +406,7 @@ class RunModel:
         canvas = FigureCanvasTkAgg(plot, appPlot)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        plt.close()
 
         Tree = training_type.estimators_[5]
         treeplot = plt.figure(figsize=(15, 10))
@@ -414,6 +418,7 @@ class RunModel:
         canvas = FigureCanvasTkAgg(treeplot, treePlot)
         canvas.draw()
         canvas.get_tk_widget().pack()
+        plt.close()
 
 
         return training_type, X_train, X_test
@@ -619,8 +624,8 @@ class RunModel:
         X_train, y_train = self.smote(features, labels)
         X_test, y_test = self.clean_testing_split(features, labels)
 
-        xgb_model = xgb.XGBClassifier(objective='reg:linear', colsample_bytree=0.3, learning_rate=0.1,
-                                      max_depth=5, alpha=10, n_estimators=10)
+        xgb_model = xgb.XGBClassifier(learning_rate=0.05,
+                                      max_depth=5, alpha=10, n_estimators=800)
         xgb_model.fit(X_train, y_train)
 
         preds = cross_val_predict(xgb_model, X_test, y_test, cv=10)
@@ -705,40 +710,46 @@ class RunModel:
 
     # todo PLot is here
 
-    def importance_plot(self, training_type, X_train):
-        expShap = shap.TreeExplainer(training_type)
-        shap_values = expShap.shap_values(X_train)
-        shap.summary_plot(shap_values[0], X_train, plot_type='dot')
-        shap.summary_plot(shap_values, X_train, plot_type='bar')
-        # self.shap_plot(0, training_type, X_train)
-
     def shap_dot_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
-        shap.summary_plot(shap_values[0], X_train, plot_type='dot')
+        shap.summary_plot(shap_values[0], X_train, plot_type='dot', show=False)
+        fig = plt.gcf()
+        fig.set_figheight(12)
+        fig.set_figwidth(14)
+        plt.tight_layout()
+        plt.show()
 
     def shap_bar_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
-        shap.summary_plot(shap_values, X_train, plot_type='bar')
-
-    def shap_plot(self, j, training_type, X_train):
-        explainerModel = shap.TreeExplainer(training_type)
-        shap_values_Model = explainerModel.shap_values(X_train)
-        # shap.force_plot(explainerModel.expected_value[j], shap_values_Model[j])
+        shap.summary_plot(shap_values, X_train, plot_type='bar', show=False)
+        fig = plt.gcf()
+        fig.set_figheight(12)
+        fig.set_figwidth(14)
+        plt.tight_layout()
+        plt.show()
 
     def shap_dependence_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
-        shap.dependence_plot("SEQN", shap_values[0], X_train)
+        shap.dependence_plot(0, shap_values[0], X_train, show=False)
+        fig = plt.gcf()
+        fig.set_figheight(12)
+        fig.set_figwidth(14)
+        plt.tight_layout()
+        plt.show()
 
-    def lime_plot(self, training_type, X_train, X_test, features, file_name):
+    def lime_plot(self, training_type, X_train, X_test, features, file_name, good, bad):
+
+
+
         # columns=X_test.columns.values
         X_test = pd.DataFrame(X_test)
         explainer = lime_tabular.LimeTabularExplainer(
             training_data=np.array(X_train),
             feature_names=features.columns,
-            class_names=['bad', 'good'],
+            class_names=[bad, good],
             mode='classification'
         )
 
@@ -750,10 +761,18 @@ class RunModel:
         html_save = FILE_URL + '/' + file_name + '.html'
         exp.save_to_file(html_save)
 
-        # pdf = HTML_pdf +'\\' + file_name + '.pdf'
-        image_save = HTML_IMAGE_URL +'/' + file_name + '.jpg'
+        image_save = HTML_IMAGE_URL +'/' + file_name + '.png'
 
-        imgkit.from_file(html_save, image_save)
+        image_name = file_name + '.png'
+
+        hti = Html2Image()
+        hti.screenshot(html_file=html_save, save_as=image_name)
+        shutil.move(image_name, image_save)
+
+        # window = tk.Toplevel()
+        # render = ImageTk.PhotoImage(file = image_save)
+        # img = tk.Label(window, image=render,bg="white")
+        # img.pack(fill='both', expand='yes')
 
 
 

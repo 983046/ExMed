@@ -153,21 +153,21 @@ class ModelDashboard(RunModel, FeatureDashboard):
 
     def click_add(self):
         win = Toplevel()
-        from Frontend import user_dashboard
+        from pythonProject.Frontend import user_dashboard
         user_dashboard.UserDashboard(win).set_feature_button()
         self.window.withdraw()
         win.deiconify()
 
     def run_extraction_frame(self):
         win = Toplevel()
-        from Frontend import extraction_dashboard
+        from pythonProject.Frontend import extraction_dashboard
         extraction_dashboard.ExtractionDashboard(win,self.chosen_normalise,self.file_name)
         self.window.withdraw()
         win.deiconify()
 
     def run_model_frame(self):
         win = Toplevel()
-        from Frontend import model_dashboard
+        from pythonProject.Frontend import model_dashboard
         model_dashboard.ModelDashboard(win,self.label, self.deeper_label,self.file_name, self.ticked_deeper,self.chosen_normalise)
         self.window.withdraw()
         win.deiconify()
@@ -259,7 +259,13 @@ class ModelDashboard(RunModel, FeatureDashboard):
         elif explanation_type == 'lime plot':
             self.name = simpledialog.askstring(title="File Name", prompt="Enter Name:",
                                                        parent=self.window)
-            self.lime_plot(self.training_type, self.X_train, self.X_test,self.features, self.name)
+
+            self.good = simpledialog.askstring(title="Good", prompt="For Lime, enter name which indicates good.",
+                                                   parent=self.window)
+            self.bad = simpledialog.askstring(title="Bad", prompt="For Lime, enter name which indicates bad.",
+                                               parent=self.window)
+
+            self.lime_plot(self.training_type, self.X_train, self.X_test,self.features, self.name, self.good, self.bad)
 
     def run_gbr(self):
         self.gradient_boosting_regression(self.features, self.chosen_label)

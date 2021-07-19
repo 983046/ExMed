@@ -159,7 +159,7 @@ class ConcatenateFiles(UserDashboard):
 
     def click_add(self):
         win = Toplevel()
-        from Frontend import user_dashboard
+        from pythonProject.Frontend import user_dashboard
         user_dashboard.UserDashboard(win).set_feature_button()
         self.window.withdraw()
         win.deiconify()

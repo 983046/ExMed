@@ -201,7 +201,7 @@ class FeatureDashboard(UserDashboard):
 
     def run_extract_frame(self):
         win = Toplevel()
-        from Frontend import extraction_dashboard
+        from pythonProject.Frontend import extraction_dashboard
         extraction_dashboard.ExtractionDashboard(win, self.chosen_normalise.get(),self.chosen_file.get())
         self.window.withdraw()
         win.deiconify()
@@ -222,7 +222,7 @@ class FeatureDashboard(UserDashboard):
 
     def click_add(self):
         win = Toplevel()
-        from Frontend import user_dashboard
+        from pythonProject.Frontend import user_dashboard
         user_dashboard.UserDashboard(win).set_feature_button()
         self.window.withdraw()
         win.deiconify()

@@ -69,7 +69,7 @@ class UserDashboard:
 
     def run_feature_frame(self):
         win = Toplevel()
-        from Frontend import feature_dashboard
+        from pythonProject.Frontend import feature_dashboard
         feature_dashboard.FeatureDashboard(win)
         self.window.withdraw()
         win.deiconify()
@@ -187,7 +187,7 @@ class UserDashboard:
         if len(self.get_selection()) >= 2:
             if self.check_file_type() == True:
                 win = Toplevel()
-                from Frontend import concatenate_files
+                from pythonProject.Frontend import concatenate_files
                 #todo Buttton not works.
                 concatenate_files.ConcatenateFiles(win, self.get_selection())
                 self.window.withdraw()
@@ -213,7 +213,7 @@ class UserDashboard:
     def click_combine_file(self):
         if len(self.get_selection()) >= 2:
             if self.check_file_type() == True:
-                from Frontend import combine_files
+                from pythonProject.Frontend import combine_files
                 combine_files.CombineFiles(self.get_selection())
             else:
                 messagebox.showerror("Program not optimized", "The program is not optimized for this filename type: ")
