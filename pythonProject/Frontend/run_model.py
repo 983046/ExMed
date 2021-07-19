@@ -754,7 +754,7 @@ class RunModel:
         )
 
         exp = explainer.explain_instance(
-            data_row=X_test.iloc[1],
+            data_row=X_test.iloc[0],
             predict_fn=training_type.predict_proba
         )
 
