@@ -19,6 +19,7 @@ from pythonProject.Frontend.feature_dashboard import FeatureDashboard
 
 FOLDER_URL = 'joined_files'
 SAVED_MODEL_URL = 'saved_model'
+OTHERS_URL = 'others'
 
 class ModelDashboard(RunModel, FeatureDashboard):
     def __init__(self, window, label, deeper_label,file_name, ticked_deeper,chosen_normalise):
@@ -149,7 +150,32 @@ class ModelDashboard(RunModel, FeatureDashboard):
     def save_model_pressed(self):
         user_input = simpledialog.askstring(title="File Name", prompt="Enter name for the file.:")
         document_name = SAVED_MODEL_URL + '/' + user_input + '.sav'
+        train_name = SAVED_MODEL_URL + '/' + user_input + '_train'
+        label_name = SAVED_MODEL_URL + '/' + user_input + '_label'
+        feature_name = SAVED_MODEL_URL + '/' + user_input + '_features' + '.sav'
+
+        np.save(train_name, self.X_train)
+        np.save(label_name, self.chosen_label)
+        # np.save(feature_name, self.read_file.columns)
         pickle.dump(self.training_type, open(document_name, 'wb'))
+        pickle.dump(self.features.columns, open(feature_name, 'wb'))
+
+
+        # pickle.dump(self.training_type, open(document_name, 'wb'))
+        # pickle.dump(self.X_test, open(train_name, 'wb'))
+        # pickle.dump(self.X_train, open(test_name, 'wb'))
+
+        # others_name = OTHERS_URL + '/' + user_input + '.pkl'
+        #
+        # pickle.dump(self.training_type, open(document_name, 'wb'))
+        # with open(others_name, 'wb') as f:
+        #     pickle.dump([self.X_test, self.X_train, self.chosen_label,self.features, self.training_type], f)
+
+
+
+
+
+
 
     def click_add(self):
         win = Toplevel()
@@ -183,13 +209,13 @@ class ModelDashboard(RunModel, FeatureDashboard):
     def chosen_model(self):
         self.model = self.chosen_model_value.get()
         file_url = FOLDER_URL + '/' + self.file_name
-        read_file = self.read_single_file(file_url)
+        self.read_file = self.read_single_file(file_url)
         self.model_ran = False
 
         if self.ticked_deeper == 1:
-            self.features, self.chosen_label = self.feature_deeper_label(read_file, self.label, self.deeper_label)
+            self.features, self.chosen_label = self.feature_deeper_label(self.read_file, self.label, self.deeper_label)
         else:
-            self.features, self.chosen_label = self.feature_label(read_file, self.label)
+            self.features, self.chosen_label = self.feature_label(self.read_file, self.label)
 
         if self.cb.get() == 1:
             try:
@@ -241,6 +267,8 @@ class ModelDashboard(RunModel, FeatureDashboard):
         self.save_model_button.configure(state='normal')
         self.gbr_button.configure(state='normal')
         self.explanation_button.configure(state="normal")
+
+
         self.chosen_explanation_value = StringVar(self.window)
         self.combo_explanation_value = OptionMenu(self.window, self.chosen_explanation_value, *self.explanation_value)
         self.combo_explanation_value.configure(width=35)

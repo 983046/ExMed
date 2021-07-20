@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\pythonProject\Frontend\run_models_dashboard.py">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

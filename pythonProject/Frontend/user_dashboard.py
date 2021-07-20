@@ -30,8 +30,6 @@ class UserDashboard:
         self.admin_dashboard_frame_black = PhotoImage(file='images\\black_user_frame.png')
         self.image_panel = Label(self.window, image=self.admin_dashboard_frame_white)
         self.image_panel.pack(fill='both', expand='yes')
-        self.on = PhotoImage(file="images\\on.png")
-        self.off = PhotoImage(file="images\\off.png")
         self.set_frame()
 
     #     #Switch
@@ -182,6 +180,23 @@ class UserDashboard:
                                        , borderwidth=0, background="white", cursor="hand2")
         self.model_button_red.configure(state="disabled")
         self.model_button_red.place(x=410, y=24)
+
+        self.run_models = ImageTk.PhotoImage \
+            (file='images\\run_models_button_red.png')
+        self.run_models_button_red = Button(self.window, image=self.run_models,
+                                       font=("yu gothic ui", 13, "bold"), relief=FLAT,
+                                       activebackground="white"
+                                       , borderwidth=0, background="white", cursor="hand2", command=self.run_models_frame)
+        self.run_models_button_red.place(x=1100, y=24)
+
+
+    def run_models_frame(self):
+        win = Toplevel()
+        from pythonProject.Frontend import run_models_dashboard
+        run_models_dashboard.RunModelsDashboard(win)
+        self.window.withdraw()
+        win.deiconify()
+
 
     def click_concatenate_file_user(self):
         if len(self.get_selection()) >= 2:

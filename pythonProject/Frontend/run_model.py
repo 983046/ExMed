@@ -713,7 +713,7 @@ class RunModel:
     def shap_dot_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
-        shap.summary_plot(shap_values[0], X_train, plot_type='dot', show=False)
+        shap.summary_plot(shap_values[2], X_train, plot_type='dot', show=False)
         fig = plt.gcf()
         fig.set_figheight(12)
         fig.set_figwidth(14)
@@ -773,6 +773,7 @@ class RunModel:
         # render = ImageTk.PhotoImage(file = image_save)
         # img = tk.Label(window, image=render,bg="white")
         # img.pack(fill='both', expand='yes')
+
 
 
 
