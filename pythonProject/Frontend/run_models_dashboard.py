@@ -20,6 +20,7 @@ from pythonProject.Frontend.user_dashboard import UserDashboard
 #todo Solve: File location
 #todo saving name have a condition on the length
 FOLDER_URL = 'saved_model'
+OTHERS_URL = 'others'
 file_path = []
 LOCAL_URL = 'local_image'
 
@@ -49,42 +50,50 @@ class RunModelsDashboard(UserDashboard):
         self.add_panel = Label(add_frame, image=self.concatenate_frame, bg="white")
         self.add_panel.pack(fill='both', expand='yes')
 
+        self.train_models = ImageTk.PhotoImage \
+            (file='images\\train_models_button_red.png')
+        self.train_models_button_red = Button(self.window, image=self.train_models,
+                                       font=("yu gothic ui", 13, "bold"), relief=FLAT,
+                                       activebackground="white"
+                                       , borderwidth=0, background="white", cursor="hand2", command=self.click_add)
+        self.train_models_button_red.place(x=1100, y=24)
+
         self.files = self.read_folder(FOLDER_URL)
         if len(self.files) != 0:
             self.chosen_file = StringVar(self.window)
             comboLab = OptionMenu(self.window, self.chosen_file,
                                           *self.files)
-            comboLab.configure(width=30)
-            comboLab.place(x=114, y=250)
+            comboLab.configure(width=35)
+            comboLab.place(x=115, y=259)
 
-        self.entry_text_lab = StringVar()
-        self.inFileTxt = Entry(self.window, textvariable=self.entry_text_lab)
-        self.inFileTxt.configure(state="disabled")
-        self.inFileTxt.place(x=113, y=360)
-
-        self.add_file = ImageTk.PhotoImage \
-            (file='images\\add_file_button_red.png')
-        self.add_file_button_red = Button(self.window, image=self.add_file,
-                                          font=("yu gothic ui", 13, "bold"), relief=FLAT, activebackground="white"
-                                          , borderwidth=0, background="white", cursor="hand2",
-                                          command=self.click_add_file)
-        self.add_file_button_red.place(x=270, y=340)
-
-        self.run_models_dashboard_cb = IntVar()
-        checkbox = Checkbutton(self.window, text="Written Input?", variable=self.run_models_dashboard_cb, onvalue=1, offvalue=0, command=self.isChecked)
-        checkbox.place(x=798, y=360)
-
-
-        self.specific_value = StringVar()
-        self.run_models_inFileTxt = Entry(self.window, textvariable=self.specific_value)
-        self.run_models_inFileTxt.configure(state="disabled", width='27')
-        self.run_models_inFileTxt.place(x=920, y=363)
+        # self.entry_text_lab = StringVar()
+        # self.inFileTxt = Entry(self.window, textvariable=self.entry_text_lab)
+        # self.inFileTxt.configure(state="disabled")
+        # self.inFileTxt.place(x=113, y=360)
+        #
+        # self.add_file = ImageTk.PhotoImage \
+        #     (file='images\\add_file_button_red.png')
+        # self.add_file_button_red = Button(self.window, image=self.add_file,
+        #                                   font=("yu gothic ui", 13, "bold"), relief=FLAT, activebackground="white"
+        #                                   , borderwidth=0, background="white", cursor="hand2",
+        #                                   command=self.click_add_file)
+        # self.add_file_button_red.place(x=270, y=340)
+        #
+        # self.run_models_dashboard_cb = IntVar()
+        # checkbox = Checkbutton(self.window, text="Written Input?", variable=self.run_models_dashboard_cb, onvalue=1, offvalue=0, command=self.isChecked)
+        # checkbox.place(x=798, y=360)
+        #
+        #
+        # self.specific_value = StringVar()
+        # self.run_models_inFileTxt = Entry(self.window, textvariable=self.specific_value)
+        # self.run_models_inFileTxt.configure(state="disabled", width='27')
+        # self.run_models_inFileTxt.place(x=920, y=363)
 
         self.explanation_value = ['lime plot', 'Shap Bar Plot', 'Nothing']
         self.chosen_explanation_value = StringVar(self.window)
         self.combo_explanation_value = OptionMenu(self.window, self.chosen_explanation_value, *self.explanation_value)
         self.combo_explanation_value.configure(width=35)
-        self.combo_explanation_value.place(x=115, y=495)
+        self.combo_explanation_value.place(x=115, y=382)
 
         self.explanation = ImageTk.PhotoImage \
             (file='images\\explanation_button_red.png')
@@ -92,8 +101,15 @@ class RunModelsDashboard(UserDashboard):
                                          font=("yu gothic ui", 13, "bold"), relief=FLAT, activebackground="white"
                                          , borderwidth=0, background="white", cursor="hand2",
                                          command=self.explain_local)
-        self.explanation_button.place(x=1100, y=470)
+        self.explanation_button.place(x=1100, y=360)
 
+
+    def click_add(self):
+        win = Toplevel()
+        from pythonProject.Frontend import user_dashboard
+        user_dashboard.UserDashboard(win).set_feature_button()
+        self.window.withdraw()
+        win.deiconify()
 
     def click_add_file(self):
         data = [('All files', '*.*')]
@@ -125,25 +141,22 @@ class RunModelsDashboard(UserDashboard):
         with open(model, 'rb') as f:
             training_type = pickle.load(f)
 
-        X_train = np.load(FOLDER_URL +'/' + selectedFile[:-4] + '_train' + '.npy')
-        label = np.load(FOLDER_URL +'/' + selectedFile[:-4] + '_label' + '.npy')
-        # features = np.load(FOLDER_URL +'/' + selectedFile[:-4] + '_features' + '.npy')
-
-        model_new = FOLDER_URL + '/'+ selectedFile[:-4] + '_features' + '.sav'
+        X_train = np.load(OTHERS_URL +'/' + selectedFile[:-4] + '_train' + '.npy')
+        label = np.load(OTHERS_URL +'/' + selectedFile[:-4] + '_label' + '.npy')
+        model_new = OTHERS_URL + '/'+ selectedFile[:-4] + '_features' + '.sav'
         with open(model_new, 'rb') as f:
             features = pickle.load(f)
 
 
-        print(features)
-        print(features.shape)
-        # if self.run_models_dashboard_cb.get() == 1:
+        # print(features)
+        # print(features.shape)
+        #if self.run_models_dashboard_cb.get() == 1:
         #data = self.specific_value.get()
         sampleNumber = np.random.randint(low = 0,high = X_train.shape[1], size =1)[0]
         y_test = label[sampleNumber]
         X_test = X_train[sampleNumber].reshape(1, -1)
 
-        # else:
-        #     pass
+
         explanation_type = self.chosen_explanation_value.get()
         if explanation_type == 'Nothing':
             pass

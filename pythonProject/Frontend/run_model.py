@@ -214,13 +214,14 @@ class RunModel:
         return (data, Feature_named_column)
 
     def pca_svm(self, features, label, n_elements_model, chosen_normalise):
-        concatenate_data_labels, features_columns = self.concatenate(features,
-                                                                     label)
         # PCA
-        x_data, feature_named_column = \
-            self.normalization(concatenate_data_labels, features_columns, chosen_normalise)
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
+            concatenate_data_labels, features_columns = self.concatenate(features,
+                                                                         label)
+            features, feature_named_column = \
+                self.normalization(concatenate_data_labels, features_columns, chosen_normalise)
 
-        principal_components_data = self.apply_pca(x_data, n_elements_model)
+        principal_components_data = self.apply_pca(features, n_elements_model)
         features = pd.DataFrame(principal_components_data)
 
         # features = self.covert_to_dataframe(principal_components_data)
@@ -266,7 +267,7 @@ class RunModel:
 
     def pca_regression(self, features, label, n_elements_model, chosen_normalise):
 
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          label)
             # PCA
@@ -327,7 +328,7 @@ class RunModel:
         return training_type, X_train, X_test
 
     def svm(self, features, label, chosen_normalise):
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          label)
             features, feature_named_column = \
@@ -370,7 +371,7 @@ class RunModel:
 
     def regression(self, features, labels, chosen_normalise):
         # x = self.scale(features)
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
             features, feature_named_column = \
@@ -424,7 +425,7 @@ class RunModel:
         return training_type, X_train, X_test
 
     def MLPRegression(self, features, labels, chosen_normalise,max_iter,hidden_layer_sizes):
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
             features, feature_named_column = \
@@ -468,7 +469,7 @@ class RunModel:
     def pca_MLPRegression(self, features, labels, n_elements_model, chosen_normalise,max_iter,hidden_layer_sizes):
         # max_iter = 1000
         # hidden_layer_sizes = 15
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
             # PCA
@@ -615,7 +616,7 @@ class RunModel:
         plt.close()
 
     def XGBoost(self, features, labels, chosen_normalise):
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
             features, feature_named_column = \
@@ -658,7 +659,7 @@ class RunModel:
         return xgb_model, X_train, X_test
 
     def pca_XGBoost(self, features, labels, n_elements_model, chosen_normalise):
-        if chosen_normalise != "Nothing":
+        if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
             # PCA
@@ -710,40 +711,55 @@ class RunModel:
 
     # todo PLot is here
 
-    def shap_dot_plot(self, training_type, X_train):
+    def shap_dot_plot(self, training_type, X_train, input):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
-        shap.summary_plot(shap_values[2], X_train, plot_type='dot', show=False)
+        shap.summary_plot(shap_values[input], X_train, plot_type='dot', show=False)
+        plt.rcParams["font.weight"] = "bold"
+        plt.rcParams["axes.labelweight"] = "bold"
+        plt.rc('font', size=20)
+        plt.title('Shap Dot Plot')
         fig = plt.gcf()
         fig.set_figheight(12)
         fig.set_figwidth(14)
         plt.tight_layout()
-        plt.show()
+        word = 'local_image/'+ str(input) + '.png'
+        plt.savefig(word)
+        plt.close()
 
     def shap_bar_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
         shap.summary_plot(shap_values, X_train, plot_type='bar', show=False)
+        plt.rcParams["font.weight"] = "bold"
+        plt.rcParams["axes.labelweight"] = "bold"
+        plt.rc('font', size=20)
+        plt.title('Shap Bar Plot')
         fig = plt.gcf()
         fig.set_figheight(12)
         fig.set_figwidth(14)
         plt.tight_layout()
+        plt.savefig('local_image/bar.png')
         plt.show()
+        plt.close()
 
     def shap_dependence_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
         shap.dependence_plot(0, shap_values[0], X_train, show=False)
+        plt.rcParams["font.weight"] = "bold"
+        plt.rcParams["axes.labelweight"] = "bold"
+        plt.rc('font', size=15)
         fig = plt.gcf()
         fig.set_figheight(12)
         fig.set_figwidth(14)
         plt.tight_layout()
+        plt.rcParams["font.weight"] = "bold"
+        plt.savefig('local_image/dependence.png')
         plt.show()
+        plt.close()
 
     def lime_plot(self, training_type, X_train, X_test, features, file_name, good, bad):
-
-
-
         # columns=X_test.columns.values
         X_test = pd.DataFrame(X_test)
         explainer = lime_tabular.LimeTabularExplainer(

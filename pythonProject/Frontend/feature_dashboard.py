@@ -85,6 +85,8 @@ class FeatureDashboard(UserDashboard):
             df.to_csv(file_url)
         elif choice == 'Nothing':
             None
+        else:
+            None
 
         #self.apply_norm(read_file,file_url)
 
@@ -198,6 +200,14 @@ class FeatureDashboard(UserDashboard):
                                         , borderwidth=0, background="white", cursor="hand2")
         self.model_button_red.configure(state="disabled")
         self.model_button_red.place(x=410, y=24)
+
+        self.run_models = ImageTk.PhotoImage \
+            (file='images\\run_models_button_red.png')
+        self.run_models_button_red = Button(self.window, image=self.run_models,
+                                       font=("yu gothic ui", 13, "bold"), relief=FLAT,
+                                       activebackground="white"
+                                       , borderwidth=0, background="white", cursor="hand2", command=self.run_models_frame)
+        self.run_models_button_red.place(x=1100, y=24)
 
     def run_extract_frame(self):
         win = Toplevel()

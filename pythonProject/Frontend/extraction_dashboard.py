@@ -112,6 +112,14 @@ class ExtractionDashboard(UserDashboard, RunModel):
         self.next_frame_button_red.configure(state="disabled")
         self.next_frame_button_red.place(x=1000, y=450)
 
+        self.run_models = ImageTk.PhotoImage \
+            (file='images\\run_models_button_red.png')
+        self.run_models_button_red = Button(self.window, image=self.run_models,
+                                       font=("yu gothic ui", 13, "bold"), relief=FLAT,
+                                       activebackground="white"
+                                       , borderwidth=0, background="white", cursor="hand2", command=self.run_models_frame)
+        self.run_models_button_red.place(x=1100, y=24)
+
     def run_extraction_frame(self):
         win = Toplevel()
         from pythonProject.Frontend import extraction_dashboard

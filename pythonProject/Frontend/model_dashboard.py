@@ -147,20 +147,29 @@ class ModelDashboard(RunModel, FeatureDashboard):
         self.gbr_button.configure(state='disabled')
         self.gbr_button.place(x=800, y=443)
 
+        self.run_models = ImageTk.PhotoImage \
+            (file='images\\run_models_button_red.png')
+        self.run_models_button_red = Button(self.window, image=self.run_models,
+                                       font=("yu gothic ui", 13, "bold"), relief=FLAT,
+                                       activebackground="white"
+                                       , borderwidth=0, background="white", cursor="hand2", command=self.run_models_frame)
+        self.run_models_button_red.place(x=1100, y=24)
+
     def save_model_pressed(self):
         user_input = simpledialog.askstring(title="File Name", prompt="Enter name for the file.:")
         document_name = SAVED_MODEL_URL + '/' + user_input + '.sav'
-        train_name = SAVED_MODEL_URL + '/' + user_input + '_train'
-        label_name = SAVED_MODEL_URL + '/' + user_input + '_label'
-        feature_name = SAVED_MODEL_URL + '/' + user_input + '_features' + '.sav'
+        feature_name = OTHERS_URL + '/' + user_input + '_features' + '.sav'
+
+        train_name = OTHERS_URL + '/' + user_input + '_train'
+        label_name = OTHERS_URL + '/' + user_input + '_label'
+
 
         np.save(train_name, self.X_train)
         np.save(label_name, self.chosen_label)
-        # np.save(feature_name, self.read_file.columns)
         pickle.dump(self.training_type, open(document_name, 'wb'))
         pickle.dump(self.features.columns, open(feature_name, 'wb'))
 
-
+        # np.save(feature_name, self.read_file.columns)
         # pickle.dump(self.training_type, open(document_name, 'wb'))
         # pickle.dump(self.X_test, open(train_name, 'wb'))
         # pickle.dump(self.X_train, open(test_name, 'wb'))
@@ -279,7 +288,9 @@ class ModelDashboard(RunModel, FeatureDashboard):
         if explanation_type == 'Nothing':
             pass
         elif explanation_type == 'Shap Dot Plot':
-            self.shap_dot_plot(self.training_type, self.X_train)
+            self.input = int(simpledialog.askstring(title="Input", prompt="Input Dot Plot element for interface",
+                                                       parent=self.window))
+            self.shap_dot_plot(self.training_type, self.X_train, self.input)
         elif explanation_type == 'Shap Bar Plot':
             self.shap_bar_plot(self.training_type, self.X_train)
         elif explanation_type == 'Shap dependence Plot':

@@ -110,6 +110,14 @@ class ConcatenateFiles(UserDashboard):
         self.extract_button_red.configure(state="disabled")
         self.extract_button_red.place(x=278, y=24)
 
+        self.run_models = ImageTk.PhotoImage \
+            (file='images\\run_models_button_red.png')
+        self.run_models_button_red = Button(self.window, image=self.run_models,
+                                       font=("yu gothic ui", 13, "bold"), relief=FLAT,
+                                       activebackground="white"
+                                       , borderwidth=0, background="white", cursor="hand2", command=self.run_models_frame)
+        self.run_models_button_red.place(x=1100, y=24)
+
     def click_concatenate_files(self):
         selected = self.lb_common.curselection()
         selected_files = self.extract_common_features()
