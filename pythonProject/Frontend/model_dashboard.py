@@ -292,7 +292,7 @@ class ModelDashboard(RunModel, FeatureDashboard):
                                                        parent=self.window))
             self.shap_dot_plot(self.training_type, self.X_train, self.input)
         elif explanation_type == 'Shap Bar Plot':
-            self.shap_bar_plot(self.training_type, self.X_train)
+            self.shap_bar_plot(self.training_type, self.X_train, self.features)
         elif explanation_type == 'Shap dependence Plot':
             self.shap_dependence_plot(self.training_type, self.X_train)
         elif explanation_type == 'lime plot':

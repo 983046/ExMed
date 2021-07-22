@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -727,21 +728,42 @@ class RunModel:
         plt.savefig(word)
         plt.close()
 
-    def shap_bar_plot(self, training_type, X_train):
+    def shap_bar_plot(self, training_type, X_train, features):
+        Classnames = np.array(['< 6 Month', ' > 12 Months', '> 6 Months AND  < 12'])
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
-        shap.summary_plot(shap_values, X_train, plot_type='bar', show=False)
-        plt.rcParams["font.weight"] = "bold"
-        plt.rcParams["axes.labelweight"] = "bold"
-        plt.rc('font', size=20)
-        plt.title('Shap Bar Plot')
+        shap.summary_plot(shap_values, X_train, plot_type='bar', show=False, class_names=Classnames,
+                          feature_names=features.columns)
         fig = plt.gcf()
         fig.set_figheight(12)
         fig.set_figwidth(14)
+        ax = plt.gca()
+        ax.set_xlabel(r'mean([SHAP value])(average impact on model output magnitude)', fontsize=16)
+        ax.set_ylabel('Feature Name', fontsize=16)
+        leg = ax.legend()
+        plt.legend(loc=4, fontsize='xx-large')
+        # plt.savefig('bar.png')
+        plt.rcParams["font.weight"] = "bold"
+        plt.rc("axes", labelweight="bold")
         plt.tight_layout()
-        plt.savefig('local_image/bar.png')
         plt.show()
         plt.close()
+
+        # expShap = shap.TreeExplainer(training_type)
+        # shap_values = expShap.shap_values(X_train)
+        # shap.summary_plot(shap_values, X_train, plot_type='bar', show=False)
+        # plt.rcParams["font.weight"] = "bold"
+        # plt.rcParams["axes.labelweight"] = "bold"
+        # plt.title('Shap Bar Plot')
+        # fig = plt.gcf()
+        # fig.set_figheight(12)
+        # fig.set_figwidth(14)
+        # plt.tight_layout()
+        # # plt.savefig('bar.png')
+        # plt.show()
+        # plt.close()
+
+
 
     def shap_dependence_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
@@ -795,3 +817,6 @@ class RunModel:
 
 
 
+#testshap.iloc[i]
+#^ Name: Number
+#originaldataset.iloc[Number] ^
