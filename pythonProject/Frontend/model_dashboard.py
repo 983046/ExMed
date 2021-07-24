@@ -22,7 +22,7 @@ SAVED_MODEL_URL = 'saved_model'
 OTHERS_URL = 'others'
 
 class ModelDashboard(RunModel, FeatureDashboard):
-    def __init__(self, window, label, deeper_label,file_name, ticked_deeper,chosen_normalise):
+    def __init__(self, window, label, deeper_label,file_name, ticked_deeper,chosen_normalise, public_value):
         self.window = window
         windowWidth = self.window.winfo_reqwidth()
         windowHeight = self.window.winfo_reqheight()
@@ -41,6 +41,7 @@ class ModelDashboard(RunModel, FeatureDashboard):
         self.file_name = file_name
         self.chosen_normalise = chosen_normalise
         self.set_frame()
+        self.public_value = public_value
 
     def set_frame(self):
         self.add_frame = Frame(self.window)
@@ -230,10 +231,10 @@ class ModelDashboard(RunModel, FeatureDashboard):
             try:
                 integer_result = int(self.specific_value.get())
                 if self.model == 'SVM':
-                    self.training_type, X_train, self.X_test = self.pca_svm(self.features, self.chosen_label, integer_result,self.chosen_normalise)
+                    self.training_type, X_train, self.X_test = self.pca_svm(self.features, self.chosen_label, integer_result,self.chosen_normalise, self.public_value)
                     self.explanation_value = ['Nothing']
                 elif self.model == 'Regression':
-                    self.training_type, X_train, self.X_test = self.pca_regression(self.features, self.chosen_label, integer_result,self.chosen_normalise)
+                    self.training_type, X_train, self.X_test = self.pca_regression(self.features, self.chosen_label, integer_result,self.chosen_normalise,self.public_value)
                     self.explanation_value = ['Shap dependence Plot','Shap Dot Plot', 'Shap Bar Plot', 'Nothing']
                 elif self.model == 'MLPRegressor':
                     self.max_iter = int(simpledialog.askstring(title="max_iter", prompt="Enter the amount of max iterations:",
@@ -244,22 +245,22 @@ class ModelDashboard(RunModel, FeatureDashboard):
                                                                          parent=self.window))
 
                     self.training_type, self.X_train, self.X_test = self.pca_MLPRegression(self.features, self.chosen_label,integer_result,
-                                                                          self.chosen_normalise,self.max_iter,self.hidden_layer_sizes )
+                                                                          self.chosen_normalise,self.max_iter,self.hidden_layer_sizes,self.public_value )
                     self.explanation_value = ['lime plot','Shap dependence Plot', 'Shap Dot Plot', 'Shap Bar Plot', 'Nothing']
                 elif self.model == 'XGBoost':
                     self.explanation_value = ['lime plot', 'Shap dependence Plot','Shap Dot Plot', 'Shap Bar Plot', 'Nothing']
                     self.training_type, self.X_train, self.X_test = self.pca_XGBoost(self.features, self.chosen_label,integer_result,
-                                                                                 self.chosen_normalise)
+                                                                                 self.chosen_normalise,self.public_value)
 
             except ValueError:
                 messagebox.showerror('Components', 'Number of components need to be a number!')
         else:
             if self.model == 'SVM':
                 self.explanation_value = ['Nothing']
-                self.training_type, self.X_train, self.X_test = self.svm(self.features, self.chosen_label,self.chosen_normalise)
+                self.training_type, self.X_train, self.X_test = self.svm(self.features, self.chosen_label,self.chosen_normalise,self.public_value)
             elif self.model == 'Regression': #todo lime,
                 self.explanation_value = ['Shap dependence Plot','Shap Dot Plot', 'Shap Bar Plot', 'Nothing']
-                self.training_type, self.X_train, self.X_test = self.regression(self.features, self.chosen_label,self.chosen_normalise)
+                self.training_type, self.X_train, self.X_test = self.regression(self.features, self.chosen_label,self.chosen_normalise,self.public_value)
             elif self.model == 'MLPRegressor': #todo just lime
                 self.max_iter = int(simpledialog.askstring(title="max_iter", prompt="Enter the amount of max iterations:",
                                                        parent=self.window))
@@ -268,10 +269,10 @@ class ModelDashboard(RunModel, FeatureDashboard):
                                                                         "hidden layers:",
                                                                  parent=self.window))
                 self.explanation_value = ['lime plot', 'Nothing']
-                self.training_type, self.X_train, self.X_test = self.MLPRegression(self.features, self.chosen_label,self.chosen_normalise,self.max_iter,self.hidden_layer_sizes)
+                self.training_type, self.X_train, self.X_test = self.MLPRegression(self.features, self.chosen_label,self.chosen_normalise,self.max_iter,self.hidden_layer_sizes,self.public_value)
             elif self.model == 'XGBoost':
                 self.explanation_value = ['lime plot', 'Shap Bar Plot', 'Nothing']
-                self.training_type, self.X_train, self.X_test = self.XGBoost(self.features, self.chosen_label,self.chosen_normalise)
+                self.training_type, self.X_train, self.X_test = self.XGBoost(self.features, self.chosen_label,self.chosen_normalise,self.public_value)
 
         self.save_model_button.configure(state='normal')
         self.gbr_button.configure(state='normal')

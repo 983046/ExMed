@@ -17,7 +17,7 @@ from pythonProject.Frontend.user_dashboard import UserDashboard
 FOLDER_URL = 'joined_files'
 
 class ExtractionDashboard(UserDashboard, RunModel):
-    def __init__(self, window,chosen_normalise, chosen_file):
+    def __init__(self, window,chosen_normalise, chosen_file, public_value):
         self.window = window
         windowWidth = self.window.winfo_reqwidth()
         windowHeight = self.window.winfo_reqheight()
@@ -33,6 +33,7 @@ class ExtractionDashboard(UserDashboard, RunModel):
         self.chosen_normalise = chosen_normalise
         self.chosen_file = chosen_file
         self.set_frame()
+        self.public_value = public_value
 
     def set_frame(self):
         add_frame = Frame(self.window)
@@ -123,7 +124,7 @@ class ExtractionDashboard(UserDashboard, RunModel):
     def run_extraction_frame(self):
         win = Toplevel()
         from pythonProject.Frontend import extraction_dashboard
-        extraction_dashboard.ExtractionDashboard(win,self.chosen_normalise)
+        extraction_dashboard.ExtractionDashboard(win,self.chosen_normalise, self.chosen_file, self.public_value)
         self.window.withdraw()
         win.deiconify()
 
@@ -169,7 +170,7 @@ class ExtractionDashboard(UserDashboard, RunModel):
     def run_model_frame(self):
         win = Toplevel()
         from pythonProject.Frontend import model_dashboard
-        model_dashboard.ModelDashboard(win,self.extraction_dashboard_label.get(), self.extraction_dashboard_inFileTxt.get(),self.chosen_file.get(), self.extraction_dashboard_cb.get(),self.chosen_normalise)
+        model_dashboard.ModelDashboard(win,self.extraction_dashboard_label.get(), self.extraction_dashboard_inFileTxt.get(),self.chosen_file.get(), self.extraction_dashboard_cb.get(),self.chosen_normalise, self.public_value)
         self.window.withdraw()
         win.deiconify()
 

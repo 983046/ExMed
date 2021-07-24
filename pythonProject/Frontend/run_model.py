@@ -24,16 +24,16 @@ import shutil
 
 from html2image import Html2Image
 
-
 imputer = SimpleImputer(strategy='median')
 from sklearn.ensemble import GradientBoostingRegressor
 import lime
 from lime import lime_tabular
 import xgboost as xgb
-
+from sklearn.metrics import f1_score
 
 FILE_URL = 'HTML_file'
 HTML_IMAGE_URL = 'HTML_image'
+
 
 class RunModel:
     def feature_label(self, read_file, label):
@@ -107,8 +107,12 @@ class RunModel:
         :param number_of_columns: Integer value of number of columns
         """
 
-        X = X.to_numpy()
-        y = y.to_numpy()
+        try:
+            X = X.to_numpy()
+            y = y.to_numpy()
+        except AttributeError:
+            X = X
+            y = y
 
         (set_for_X, set_for_Y) = (X, y)
         (ravel_1, ravel_2) = np.meshgrid(np.arange(start=set_for_X[:, 0].min() - 1,
@@ -214,7 +218,7 @@ class RunModel:
         Feature_named_column = pd.DataFrame(data, columns=feat_cols)
         return (data, Feature_named_column)
 
-    def pca_svm(self, features, label, n_elements_model, chosen_normalise):
+    def pca_svm(self, features, label, n_elements_model, chosen_normalise, public_value):
         # PCA
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
@@ -230,6 +234,11 @@ class RunModel:
         X_train, y_train = self.smote(features, label)
         X_test, y_test = self.clean_testing_split(features, label)
 
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
+
         training_type = SVC(kernel='rbf', gamma='auto', C=1.0,
                             decision_function_shape='ovr').fit(X_train,
                                                                y_train)
@@ -239,9 +248,13 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -266,7 +279,7 @@ class RunModel:
 
         return training_type, X_train, X_test
 
-    def pca_regression(self, features, label, n_elements_model, chosen_normalise):
+    def pca_regression(self, features, label, n_elements_model, chosen_normalise, public_value):
 
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
@@ -281,6 +294,11 @@ class RunModel:
         X_train, y_train = self.smote(features, label)
         X_test, y_test = self.clean_testing_split(features, label)
 
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
+
         training_type = RandomForestClassifier(random_state=42)
         training_type.fit(X_train, y_train)
         preds = cross_val_predict(training_type, X_test, y_test, cv=10)
@@ -290,9 +308,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -328,7 +349,7 @@ class RunModel:
 
         return training_type, X_train, X_test
 
-    def svm(self, features, label, chosen_normalise):
+    def svm(self, features, label, chosen_normalise, public_value):
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          label)
@@ -338,6 +359,11 @@ class RunModel:
         # SMOTE
         X_train, y_train = self.smote(features, label)
         X_test, y_test = self.clean_testing_split(features, label)
+
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
 
         training_type = SVC(kernel='rbf', gamma='auto', C=1.0,
                             decision_function_shape='ovr').fit(X_train,
@@ -349,9 +375,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -370,7 +399,7 @@ class RunModel:
 
         return training_type, X_train, X_test
 
-    def regression(self, features, labels, chosen_normalise):
+    def regression(self, features, labels, chosen_normalise, public_value):
         # x = self.scale(features)
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
@@ -381,6 +410,11 @@ class RunModel:
         X_train, y_train = self.smote(features, labels)
         X_test, y_test = self.clean_testing_split(features, labels)
 
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
+
         training_type = RandomForestClassifier(random_state=42)
         training_type.fit(X_train, y_train)
         preds = cross_val_predict(training_type, X_test, y_test, cv=10)
@@ -389,9 +423,13 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -403,7 +441,7 @@ class RunModel:
         sns.distplot(preds, hist=False, color="b", label="Fitted Values", ax=ax)
         plt.title('Actual vs Fitted Values')
         plt.tight_layout()
-        #test.show()
+        # test.show()
 
         canvas = FigureCanvasTkAgg(plot, appPlot)
         canvas.draw()
@@ -413,19 +451,17 @@ class RunModel:
         Tree = training_type.estimators_[5]
         treeplot = plt.figure(figsize=(15, 10))
         tree.plot_tree(Tree, filled=True,
-                         rounded=True,
-                         fontsize=14);
-
+                       rounded=True,
+                       fontsize=14);
 
         canvas = FigureCanvasTkAgg(treeplot, treePlot)
         canvas.draw()
         canvas.get_tk_widget().pack()
         plt.close()
 
-
         return training_type, X_train, X_test
 
-    def MLPRegression(self, features, labels, chosen_normalise,max_iter,hidden_layer_sizes):
+    def MLPRegression(self, features, labels, chosen_normalise, max_iter, hidden_layer_sizes, public_value):
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
@@ -437,6 +473,11 @@ class RunModel:
         X_train, y_train = self.smote(features, labels)
         X_test, y_test = self.clean_testing_split(features, labels)
 
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
+
         clf = MLPClassifier(solver='lbfgs', alpha=1e-5, max_iter=max_iter,
                             hidden_layer_sizes=hidden_layer_sizes, random_state=1)
         clf.fit(X_train, y_train)
@@ -446,9 +487,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds, average='micro'))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -467,7 +511,8 @@ class RunModel:
 
         return clf, X_train, X_test
 
-    def pca_MLPRegression(self, features, labels, n_elements_model, chosen_normalise,max_iter,hidden_layer_sizes):
+    def pca_MLPRegression(self, features, labels, n_elements_model, chosen_normalise, max_iter, hidden_layer_sizes,
+                          public_value):
         # max_iter = 1000
         # hidden_layer_sizes = 15
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
@@ -485,6 +530,11 @@ class RunModel:
         X_train, y_train = self.smote(features, labels)
         X_test, y_test = self.clean_testing_split(features, labels)
 
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
+
         clf = MLPClassifier(solver='lbfgs', alpha=1e-5, max_iter=max_iter,
                             hidden_layer_sizes=hidden_layer_sizes, random_state=1)
         clf.fit(X_train, y_train)
@@ -495,9 +545,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
 
         cm = confusion_matrix(y_test, preds)
         print(cm)
@@ -616,7 +669,7 @@ class RunModel:
         plt.show()
         plt.close()
 
-    def XGBoost(self, features, labels, chosen_normalise):
+    def XGBoost(self, features, labels, chosen_normalise, public_value):
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
@@ -625,6 +678,11 @@ class RunModel:
 
         X_train, y_train = self.smote(features, labels)
         X_test, y_test = self.clean_testing_split(features, labels)
+
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
 
         xgb_model = xgb.XGBClassifier(learning_rate=0.05,
                                       max_depth=5, alpha=10, n_estimators=800)
@@ -637,9 +695,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
 
         cm = confusion_matrix(y_test, preds)
         print(cm)
@@ -659,7 +720,7 @@ class RunModel:
 
         return xgb_model, X_train, X_test
 
-    def pca_XGBoost(self, features, labels, n_elements_model, chosen_normalise):
+    def pca_XGBoost(self, features, labels, n_elements_model, chosen_normalise, public_value):
         if chosen_normalise != "Nothing" and len(chosen_normalise) >= 5:
             concatenate_data_labels, features_columns = self.concatenate(features,
                                                                          labels)
@@ -673,6 +734,11 @@ class RunModel:
         X_train, y_train = self.smote(features, labels)
         X_test, y_test = self.clean_testing_split(features, labels)
 
+        if public_value == 'enabled':
+            imp = SimpleImputer(strategy="most_frequent")
+            imp.fit_transform(X_train)
+            X_train = imp.transform(X_train)
+
         xgb_model = xgb.XGBClassifier(objective='reg:linear', colsample_bytree=0.3, learning_rate=0.1,
                                       max_depth=5, alpha=10, n_estimators=10)
         xgb_model.fit(X_train, y_train)
@@ -683,9 +749,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-        except:
+            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds))
+        except ValueError:
             print('Precision = :', precision_score(y_test, preds, average='micro'))
             print("Recall Score : ", recall_score(y_test, preds, average='micro'))
+            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -724,7 +793,7 @@ class RunModel:
         fig.set_figheight(12)
         fig.set_figwidth(14)
         plt.tight_layout()
-        word = 'local_image/'+ str(input) + '.png'
+        word = 'local_image/' + str(input) + '.png'
         plt.savefig(word)
         plt.close()
 
@@ -763,8 +832,6 @@ class RunModel:
         # plt.show()
         # plt.close()
 
-
-
     def shap_dependence_plot(self, training_type, X_train):
         expShap = shap.TreeExplainer(training_type)
         shap_values = expShap.shap_values(X_train)
@@ -799,7 +866,7 @@ class RunModel:
         html_save = FILE_URL + '/' + file_name + '.html'
         exp.save_to_file(html_save)
 
-        image_save = HTML_IMAGE_URL +'/' + file_name + '.png'
+        image_save = HTML_IMAGE_URL + '/' + file_name + '.png'
 
         image_name = file_name + '.png'
 
@@ -812,11 +879,6 @@ class RunModel:
         # img = tk.Label(window, image=render,bg="white")
         # img.pack(fill='both', expand='yes')
 
-
-
-
-
-
-#testshap.iloc[i]
-#^ Name: Number
-#originaldataset.iloc[Number] ^
+# testshap.iloc[i]
+# ^ Name: Number
+# originaldataset.iloc[Number] ^

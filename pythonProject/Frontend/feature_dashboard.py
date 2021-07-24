@@ -69,6 +69,7 @@ class FeatureDashboard(UserDashboard):
             read_file = read_file.fillna(read_file.mean())
             df = pd.DataFrame(read_file, columns=read_file.columns)
             df.to_csv(file_url)
+            self.public_value = 'disabled'
         elif choice == 'Zero':
             # where_are_NaNs = np.isnan(read_file)
             # read_file[where_are_NaNs] = 0
@@ -76,6 +77,7 @@ class FeatureDashboard(UserDashboard):
             read_file = read_file.fillna(0)
             df = pd.DataFrame(read_file, columns=read_file.columns)
             df.to_csv(file_url)
+            self.public_value = 'disabled'
         elif choice == 'One':
             # where_are_NaNs = np.isnan(read_file)
             # read_file[where_are_NaNs] = 1
@@ -83,9 +85,14 @@ class FeatureDashboard(UserDashboard):
             read_file = read_file.fillna(1)
             df = pd.DataFrame(read_file, columns=read_file.columns)
             df.to_csv(file_url)
+            self.public_value = 'disabled'
+        elif choice == 'Most_frequent':
+            self.public_value = 'enabled'
         elif choice == 'Nothing':
+            self.public_value = 'disabled'
             None
         else:
+            self.public_value = 'disabled'
             None
 
         #self.apply_norm(read_file,file_url)
@@ -154,7 +161,7 @@ class FeatureDashboard(UserDashboard):
             comboLab.configure(width=11)
             comboLab.place(x=123, y=280)
 
-        self.na_values = ['Mean', 'Zero', 'One', 'Nothing']
+        self.na_values = ['Mean', 'Zero', 'One','Most_frequent','Nothing']
         if len(self.na_values) != 0:
             self.chosen_na_value = StringVar(self.window)
             comboLab = OptionMenu(self.window, self.chosen_na_value,
@@ -212,7 +219,7 @@ class FeatureDashboard(UserDashboard):
     def run_extract_frame(self):
         win = Toplevel()
         from pythonProject.Frontend import extraction_dashboard
-        extraction_dashboard.ExtractionDashboard(win, self.chosen_normalise.get(),self.chosen_file.get())
+        extraction_dashboard.ExtractionDashboard(win, self.chosen_normalise.get(),self.chosen_file.get(), self.public_value)
         self.window.withdraw()
         win.deiconify()
 
