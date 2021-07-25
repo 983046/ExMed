@@ -248,12 +248,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
 
         cm = confusion_matrix(y_test, preds)
         print(cm)
@@ -308,12 +308,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -375,12 +375,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -487,12 +487,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
@@ -545,12 +545,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
 
         cm = confusion_matrix(y_test, preds)
         print(cm)
@@ -695,12 +695,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
 
         cm = confusion_matrix(y_test, preds)
         print(cm)
@@ -749,12 +749,12 @@ class RunModel:
         try:
             print(f'Accuracy = {accuracy_score(y_test, preds):.2f}'
                   f'\nRecall = {recall_score(y_test, preds):.2f}\n')
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
             print("F1 Score: ", f1_score(y_test, preds))
         except ValueError:
-            print('Precision = :', precision_score(y_test, preds, average='micro'))
-            print("Recall Score : ", recall_score(y_test, preds, average='micro'))
-            print("F1 Score: ", f1_score(y_test, preds,average='micro'))
+            print('Precision = :', precision_score(y_test, preds, average=None))
+            print("Recall Score : ", recall_score(y_test, preds, average=None))
+            print("F1 Score: ", f1_score(y_test, preds, average=None))
         cm = confusion_matrix(y_test, preds)
         print(cm)
 
